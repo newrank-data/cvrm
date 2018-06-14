@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>阿斯利康CVRM日报</title>
+  <style>
+    input, select {
+      margin: 2px 0;
+    }
+    td {
+      padding: 0;
+    }
+  </style>
+  <script src="../../vue.js"></script>
+  <script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
+</head>
+<body style="margin: 0; padding: 0;">
+  <div id="app" style="position: relative; width: 100%; height: 100vh;">
+    <!-- 预览 -->
+    <div style="position: absolute; height: 100vh; overflow-x: hidden; overflow-y: scroll;">
+      <div ref="preview" style="position: relative; width: 854px; box-sizing: border-box;">
+        <table style="width: 854px; border: 0; border-spacing: 0; background-color: #E4DFEC; border-collapse: collapse; font-size: 16px;">
+          <!-- 封面 -->
+          <tr>
+            <td style="width: 30px;"></td>
+            <td style="width: 30px;"></td>
+            <td colspan="6" style="height: 30px;"></td>
+            <td style="width: 30px;"></td>
+            <td style="width: 30px;"></td>
+          </tr>
+          <tr style="height: 424px;">
+            <td ></td>
+            <td colspan="8"></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td colspan="10" style="height: 30px;"></td>
+          </tr>
+          <!-- 汇总开始 -->
+          <tr style="height: 42px; background: #8B0051; color: #ffffff;font-weight: bold;">
+            <td style="background-color: #E4DFEC;"></td>
+            <td></td>
+            <td colspan="3">汇总<span style="color: #000000;"> | Summary</span></td>
+            <td colspan="3">数量<span style="color: #000000;"> | Volume</span></td>
+            <td></td>
+            <td style="background-color: #E4DFEC;"></td>
+          </tr>
+          <tr style="height: 30px; background-color: #ffffff;">
+            <td style="background-color: #e4dfec;"></td>
+            <td></td>
+            <td colspan="6"></td>
+            <td></td>
+            <td style="background-color: #e4dfec;"></td>
+          </tr>
+          <tr style="background-color: #ffffff; height: 42px; color: #000000;">
+            <td style="background-color: #e4dfec;"></td>
+            <td></td>
+            <td colspan="3">
+                <b><span style="color: #8B0051;">心血管</span> | CV</b>
+            </td>
+            <td colspan="3">
+                <b>{{cv_sum}}</b>
+            </td>
+            <td></td>
+            <td style="background-color: #e4dfec;"></td>
+          </tr>
+          <tr style="background-color: #ffffff; height: 42px; color: #000000;">
+            <td style="background-color: #e4dfec;"></td>
+            <td></td>
+            <td colspan="3">
+                <b><span style="color: #8B0051">代谢</span> | DM</b>
+            </td>
+            <td colspan="3">
+                <b>{{dm_sum}}</b>
+            </td>
+            <td></td>
+            <td style="background-color: #e4dfec;"></td>
+          </tr>
+          <tr style="background-color: #ffffff; height: 42px; color: #000000;">
+            <td style="background-color: #e4dfec;"></td>
+            <td></td>
+            <td colspan="3">
+                <b><span style="color: #8B0051;">肾病</span> | Renal</b>
+            </td>
+            <td colspan="3">
+                <b>{{ckd_sum}}</b>
+            </td>
+            <td></td>
+            <td style="background-color: #e4dfec;"></td>
+          </tr>
+          <tr style="height: 30px; background-color: #ffffff;">
+            <td style="background-color: #e4dfec;"></td>
+            <td></td>
+            <td colspan="6"></td>
+            <td></td>
+            <td style="background-color: #e4dfec;"></td>
+          </tr>
+          <!-- 汇总结束 -->
+          <!-- CV 开始 -->
+          <tr v-if="cv_sum" style="background-color: #8B0051; height: 42px; color: #ffffff;">
+            <td style="background-color: #e4dfec;"></td>
+            <td></td>
+            <td colspan="6">
+              <b>心血管<span style="color: #000000;"> | CV</span></b>
+            </td>
+            <td></td>
+            <td style="background-color: #e4dfec;"></td>
+          </tr>
+          <tr v-if="cv_sum" style="height: 42px; background-color: #ffffff;">
+            <td style="background-color: #e4dfec;"></td>
+            <td colspan="8"></td>
+            <td style="background-color: #e4dfec;"></td>
+          </tr>
+          <tbody v-for="(e, ei) in cv_drugs" :key="ei">
+            <tr v-if="e.articles.length" style="height: 42px; background-color: #ffffff;">
+              <td style="background-color: #e4dfec;"></td>
+              <td></td>
+              <td colspan="6" style="color: #8B0051;"><b>{{e.name}}</b></td>
+              <td></td>
+              <td style="background-color: #e4dfec;"></td>
+            </tr>
+            <tr v-if="e.articles.length" style="background-color: #ffffff;">
+              <td style="background-color: #e4dfec;"></td>
+              <td></td>
+              <td colspan="6">
+                <div v-for="(a, ai) in e.articles" :key="ei+'-'+ai" style="margin: 30px 0;">
+                  <p><b><a :href="a.link" target="_blank">{{a.title}}</a></b></p>
+                  <p><b>{{a.media}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{a.publish}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;相似文章共{{a.related}}篇</b></p>
+                  <p>{{a.abstract}}</p>
+                </div>
+              </td>
+              <td></td>
+              <td style="background-color: #e4dfec;"></td>
+            </tr>
+          </tbody>
+          <tr v-if="cv_sum" style="height: 42px; background-color: #ffffff;">
+              <td style="background-color: #e4dfec;"></td>
+              <td colspan="8"></td>
+              <td style="background-color: #e4dfec;"></td>
+          </tr>
+          <!-- CV 结束 -->
+          <!-- DM 开始 -->
+          <tr v-if="dm_sum" style="background-color: #8B0051; height: 42px; color: #ffffff;">
+            <td style="background-color: #e4dfec;"></td>
+            <td></td>
+            <td colspan="6">
+              <b>代谢<span style="color: #000000;"> | DM</span></b>
+            </td>
+            <td></td>
+            <td style="background-color: #e4dfec;"></td>
+          </tr>
+          <tr v-if="dm_sum" style="height: 42px; background-color: #ffffff;">
+            <td style="background-color: #e4dfec;"></td>
+            <td colspan="8"></td>
+            <td style="background-color: #e4dfec;"></td>
+          </tr>
+          <tbody v-for="(e, ei) in dm_drugs" :key="ei">
+            <tr v-if="e.articles.length" style="height: 42px; background-color: #ffffff;">
+              <td style="background-color: #e4dfec;"></td>
+              <td></td>
+              <td colspan="6" style="color: #8B0051;"><b>{{e.name}}</b></td>
+              <td></td>
+              <td style="background-color: #e4dfec;"></td>
+            </tr>
+            <tr v-if="e.articles.length" style="background-color: #ffffff;">
+              <td style="background-color: #e4dfec;"></td>
+              <td></td>
+              <td colspan="6">
+                <div v-for="(a, ai) in e.articles" :key="ei+'-'+ai" style="margin: 30px 0;">
+                  <p><b><a :href="a.link" target="_blank">{{a.title}}</a></b></p>
+                  <p><b>{{a.media}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{a.publish}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;相似文章共{{a.related}}篇</b></p>
+                  <p>{{a.abstract}}</p>
+                </div>
+              </td>
+              <td></td>
+              <td style="background-color: #e4dfec;"></td>
+            </tr>
+          </tbody>
+          <tr v-if="dm_sum" style="height: 42px; background-color: #ffffff;">
+            <td style="background-color: #e4dfec;"></td>
+            <td colspan="8"></td>
+            <td style="background-color: #e4dfec;"></td>
+          </tr>
+          <!-- DM 结束 -->
+          <!-- CKD 开始 -->
+          <tr v-if="ckd_sum" style="background-color: #8B0051; height: 42px; color: #ffffff;">
+            <td style="background-color: #e4dfec;"></td>
+            <td></td>
+            <td colspan="6">
+              <b>肾病<span style="color: #000000;"> | Renal</span></b>
+            </td>
+            <td></td>
+            <td style="background-color: #e4dfec;"></td>
+          </tr>
+          <tr v-if="ckd_sum" style="height: 42px; background-color: #ffffff;">
+            <td style="background-color: #e4dfec;"></td>
+            <td colspan="8"></td>
+            <td style="background-color: #e4dfec;"></td>
+          </tr>
+          <tbody v-for="(e, ei) in ckd_drugs" :key="ei">
+            <tr v-if="e.articles.length" style="height: 42px; background-color: #ffffff;">
+              <td style="background-color: #e4dfec;"></td>
+              <td></td>
+              <td colspan="6" style="color: #8B0051;"><b>{{e.name}}</b></td>
+              <td></td>
+              <td style="background-color: #e4dfec;"></td>
+            </tr>
+            <tr v-if="e.articles.length" style="background-color: #ffffff;">
+              <td style="background-color: #e4dfec;"></td>
+              <td></td>
+              <td colspan="6">
+                <div v-for="(a, ai) in e.articles" :key="ei+'-'+ai" style="margin: 30px 0;">
+                  <p><b><a :href="a.link" target="_blank">{{a.title}}</a></b></p>
+                  <p><b>{{a.media}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{a.publish}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;相似文章共{{a.related}}篇</b></p>
+                  <p>{{a.abstract}}</p>
+                </div>
+              </td>
+              <td></td>
+              <td style="background-color: #e4dfec;"></td>
+            </tr>
+          </tbody>
+          <tr v-if="ckd_sum" style="height: 42px; background-color: #ffffff;">
+            <td style="background-color: #e4dfec;"></td>
+            <td colspan="8"></td>
+            <td style="background-color: #e4dfec;"></td>
+          </tr>
+          <!-- CKD 结束 -->
+          <tr>
+            <td colspan="10" style="height: 30px;"></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <!-- 操作 -->
+    <div style="background-color: #eeeeee; position: fixed; z-index: 5; top: 0; right: 0; width: calc(100% - 854px); height: 200px; padding: 14px; box-sizing: border-box;">
+      <select v-model="category" v-on:change="handleChange" style="width: 40%;">
+        <option disabled>药品分类</option>
+        <option value="0">心血管</option>
+        <option value="1">代谢</option>
+        <option value="2">肾脏</option>
+      </select>
+      <select v-model="drug" style="width: 40%;">
+        <option :value="i.toString()" :key="i.toString()" v-for="(e, i) in options">{{e}}</option>
+      </select>
+      <input type="text" v-model="link" placeholder="链接" style="width: 100%;">
+      <input type="text" v-model="title" placeholder="标题" style="width: 100%;">
+      <input type="text" v-model="media" placeholder="来源媒体" style="width: 30%;">
+      <input type="text" v-model="publish" placeholder="发布日期" style="width: 30%;">
+      <input type="number" v-model="related" placeholder="相关文章数" style="width: 10%;">
+      <input type="text" v-model="abstract" placeholder="摘要" style="width: 100%;">
+      <div style="margin-top: 12px;">
+        <button v-on:click="handleSubmit">提交</button>
+        <button id="copy" ref="copy" data-clipboard-text="" data-clipboard-action="copy">复制代码</button>  
+      </div>
+    </div>
+    <!-- 列表 -->
+    <div style="font-size: 12px; background-color: #f8f8f8; position: absolute; right: 0; top: 200px; width: calc(100% - 854px); height: calc(100vh - 200px); padding: 14px; box-sizing: border-box; overflow-y: scroll;">
+      <div v-if="cv_sum">
+        <h3>心血管 CV</h3>
+        <div v-if="drug.articles.length" v-for="(drug, drug_index) in cv_drugs" :key="drug_index">
+          <em>{{drug.name}}</em>
+          <ul>
+            <li v-for="(article, article_index) in drug.articles" :key="article_index">
+              <span>{{article.title}}</span>
+              <button data-drug="cv_drugs" :data-index1="drug_index" :data-index2="article_index" v-on:click="handleDelete">×</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div v-if="dm_sum">
+        <h3>代谢 DM</h3>
+        <div v-if="drug.articles.length" v-for="(drug, drug_index) in dm_drugs" :key="drug_index">
+          <em>{{drug.name}}</em>
+          <ul>
+            <li v-for="(article, article_index) in drug.articles" :key="article_index">
+              <span>{{article.title}}</span>
+              <button data-drug="dm_drugs" :data-index1="drug_index" :data-index2="article_index" v-on:click="handleDelete">×</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div v-if="ckd_sum">
+        <h3>肾脏 CKD</h3>
+        <div v-if="drug.articles.length" v-for="(drug, drug_index) in ckd_drugs" :key="drug_index">
+          <em>{{drug.name}}</em>
+          <ul>
+            <li v-for="(article, article_index) in drug.articles" :key="article_index">
+              <span>{{article.title}}</span>
+              <button data-drug="ckd_drugs" :data-index1="drug_index" :data-index2="article_index" v-on:click="handleDelete">×</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const clipboard = new ClipboardJS('#copy');
+    clipboard.on('success', function(e) {
+      console.info('Action:', e.action);
+      console.info('Text:', e.text);
+      console.info('Trigger:', e.trigger);
+
+      e.clearSelection();
+    });
+
+    clipboard.on('error', function(e) {
+      console.error('Action:', e.action);
+      console.error('Trigger:', e.trigger);
+    });
+
+    const app = new Vue({
+      el: '#app',
+      data: {
+        date: '',
+        category: '0',
+        drug: '0',
+        title: '',
+        link: '',
+        media: '',
+        publish: '',
+        related: 1,
+        abstract: '',
+        cv_drugs: [
+          {
+            name: '可定-本品',
+            articles: []
+          }, {
+            name: '瑞旨-竞品',
+            articles: []
+          }, {
+            name: '托妥-竞品',
+            articles: []
+          }, {
+            name: '金诺-竞品',
+            articles: []
+          }, {
+            name: '倍他乐克-本品',
+            articles: []
+          }, {
+            name: '康忻-竞品',
+            articles: []
+          }, {
+            name: '博苏-竞品',
+            articles: []
+          }, {
+            name: '倍林达-本品',
+            articles: []
+          }, {
+            name: '泰嘉-竞品',
+            articles: []
+          }, {
+            name: '波立维-竞品',
+            articles: []
+          }, {
+            name: '阿斯利康『一包药』',
+            articles: []
+          }, {
+            name: 'SGLT2 入江苏医保',
+            articles: []
+          }, {
+            name: 'CPC 胸痛中心',
+            articles: []
+          },{
+            name: '信立泰『全心关爱』',
+            articles: []
+          }, {
+            name: '赛诺菲『心起点』',
+            articles: []
+          }, {
+            name: '辉瑞『急溶急P包』',
+            articles: []
+          }
+        ],
+        dm_drugs: [
+          {
+            name: '安达唐-本品',
+            articles: []
+          }, {
+            name: '欧唐静-竞品',
+            articles: []
+          }, {
+            name: '怡可安-竞品',
+            articles: []
+          }, {
+            name: '安立格-本品',
+            articles: []
+          }, {
+            name: '捷诺达-竞品',
+            articles: []
+          }, {
+            name: '安立泽-本品',
+            articles: []
+          }, {
+            name: '捷诺维-竞品',
+            articles: []
+          }, {
+            name: '拜糖平-竞品',
+            articles: []
+          }, {
+            name: 'MMC 标准化代谢性疾病管理中心',
+            articles: []
+          }
+        ],
+        ckd_drugs: [
+          {
+            name: '罗沙司他-本品',
+            articles: []
+          }
+        ]
+      },
+      computed: {
+        options: function () {
+          return this.category == '0'
+            ? this.cv_drugs.map(function (e) {
+              return e.name;
+            })
+            : this.category == '1'
+              ? this.dm_drugs.map(function (e) {
+                return e.name;
+              })
+              : this.ckd_drugs.map(function (e) {
+                return e.name;
+              })
+        },
+        cv_sum: function () {
+          return this.cv_drugs.reduce(function (acc, cur) {
+            return acc + cur.articles.length; 
+          }, 0);
+        },
+        dm_sum: function () {
+          return this.dm_drugs.reduce(function (acc, cur) {
+            return acc + cur.articles.length; 
+          }, 0);
+        },
+        ckd_sum: function () {
+          return this.ckd_drugs.reduce(function (acc, cur) {
+            return acc + cur.articles.length;
+          }, 0);
+        }
+      },
+      methods: {
+        handleChange: function () {
+          this.drug = '0';
+        },
+        handleSubmit: function () {
+          const item = {
+            category: this.category,
+            drug: this.drug,
+            article: {
+              title: this.title,
+              link: this.link,
+              media: this.media,
+              publish: this.publish,
+              related: this.related,
+              abstract: this.abstract
+            }
+          }
+
+          if (item.category == '0') {
+            this.cv_drugs[item.drug].articles.push(item.article);
+          } else if (item.category == '1') {
+            this.dm_drugs[item.drug].articles.push(item.article);
+          } else {
+            this.ckd_drugs[item.drug].articles.push(item.article);
+          }
+
+          this.title = '';
+          this.link = '';
+          this.media = '';
+          this.publish = '';
+          this.related = 1;
+          this.abstract = '';
+        },
+        handleDelete: function (e) {
+          const drug = e.target.dataset.drug;
+          const index1 = e.target.dataset.index1;
+          const index2 = e.target.dataset.index2;
+          this[drug][index1].articles.splice(index2, 1);
+        }
+      },
+      created: function () {
+        const ct = new Date();
+        const y = ct.getFullYear();
+        const m = ct.getMonth() + 1;
+        const d = ct.getDate();
+        this.date = `${y} 年 ${m} 月 ${d} 日`;
+      },
+      updated: function () {
+        const left = '<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="ie=edge"><title>阿斯利康 CVRM 日报</title></head><body>';
+        const right = '</body></html>';
+        this.$refs.copy.setAttribute("data-clipboard-text", left + this.$refs.preview.innerHTML + right);
+      }
+    })
+  </script>
+</body>
+</html>
