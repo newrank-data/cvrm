@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>阿斯利康CVRM日报</title>
+  <title>阿斯利康 CVRM 日报</title>
   <style>
     input, select {
       margin: 2px 0;
@@ -13,7 +13,7 @@
       padding: 0;
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
   <script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
 </head>
 <body style="margin: 0; padding: 0;">
@@ -113,7 +113,7 @@
             <td colspan="8"></td>
             <td style="background-color: #e4dfec;"></td>
           </tr>
-          <tbody v-for="(e, ei) in cv_drugs" :key="ei">
+          <tbody v-for="(e, ei) in cv_drugs" :key="e.name+'-'+ei">
             <tr v-if="e.articles.length" style="height: 42px; background-color: #ffffff;">
               <td style="background-color: #e4dfec;"></td>
               <td></td>
@@ -125,7 +125,7 @@
               <td style="background-color: #e4dfec;"></td>
               <td></td>
               <td colspan="6">
-                <div v-for="(a, ai) in e.articles" :key="ei+'-'+ai" style="margin: 30px 0;">
+                <div v-for="(a, ai) in e.articles" :key="e.name+'-'+ai" style="margin: 30px 0;">
                   <p><b><a :href="a.link" target="_blank">{{a.title}}</a></b></p>
                   <p><b>{{a.media}}<span style="color: #ffffff;">------------</span>{{a.publish}}<span style="color: #ffffff;">------------</span>相似文章共{{a.related}}篇</b></p>
                   <p>{{a.abstract}}</p>
@@ -156,7 +156,7 @@
             <td colspan="8"></td>
             <td style="background-color: #e4dfec;"></td>
           </tr>
-          <tbody v-for="(e, ei) in dm_drugs" :key="ei">
+          <tbody v-for="(e, ei) in dm_drugs" :key="e.name+'-'+ei">
             <tr v-if="e.articles.length" style="height: 42px; background-color: #ffffff;">
               <td style="background-color: #e4dfec;"></td>
               <td></td>
@@ -168,7 +168,7 @@
               <td style="background-color: #e4dfec;"></td>
               <td></td>
               <td colspan="6">
-                <div v-for="(a, ai) in e.articles" :key="ei+'-'+ai" style="margin: 30px 0;">
+                <div v-for="(a, ai) in e.articles" :key="e.name+'-'+ai" style="margin: 30px 0;">
                   <p><b><a :href="a.link" target="_blank">{{a.title}}</a></b></p>
                   <p><b>{{a.media}}<span style="color: #ffffff;">------------</span>{{a.publish}}<span style="color: #ffffff;">------------</span>相似文章共{{a.related}}篇</b></p>
                   <p>{{a.abstract}}</p>
@@ -199,7 +199,7 @@
             <td colspan="8"></td>
             <td style="background-color: #e4dfec;"></td>
           </tr>
-          <tbody v-for="(e, ei) in ckd_drugs" :key="ei">
+          <tbody v-for="(e, ei) in ckd_drugs" :key="e.name+'-'+ei">
             <tr v-if="e.articles.length" style="height: 42px; background-color: #ffffff;">
               <td style="background-color: #e4dfec;"></td>
               <td></td>
@@ -211,7 +211,7 @@
               <td style="background-color: #e4dfec;"></td>
               <td></td>
               <td colspan="6">
-                <div v-for="(a, ai) in e.articles" :key="ei+'-'+ai" style="margin: 30px 0;">
+                <div v-for="(a, ai) in e.articles" :key="e.name+'-'+ai" style="margin: 30px 0;">
                   <p><b><a :href="a.link" target="_blank">{{a.title}}</a></b></p>
                   <p><b>{{a.media}}<span style="color: #ffffff;">------------</span>{{a.publish}}<span style="color: #ffffff;">------------</span>相似文章共{{a.related}}篇</b></p>
                   <p>{{a.abstract}}</p>
@@ -310,10 +310,17 @@
       console.error('Trigger:', e.trigger);
     });
 
+    window.onbeforeunload = function (e) {  
+      e = e || window.event;  
+      if (e) {  
+        e.returnValue = '关闭提示';  
+      }  
+      return '关闭提示';  
+    };  
+
     const app = new Vue({
       el: '#app',
       data: {
-        date: '',
         category: '0',
         drug: '0',
         title: '',
@@ -497,13 +504,6 @@
           const index2 = e.target.dataset.index2;
           this[drug][index1].articles.splice(index2, 1);
         }
-      },
-      created: function () {
-        const ct = new Date();
-        const y = ct.getFullYear();
-        const m = ct.getMonth() + 1;
-        const d = ct.getDate();
-        this.date = `${y} 年 ${m} 月 ${d} 日`;
       },
       updated: function () {
         const left = '<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="ie=edge"><title>阿斯利康 CVRM 日报</title></head><body>';
