@@ -20,9 +20,14 @@
   <div id="app" style="position: relative; width: 100%; height: 100vh;">
     <!-- 预览 -->
     <div style="position: absolute; height: 100vh; overflow-x: hidden; overflow-y: scroll;">
+      <div style="width: 794px; height: 424px; background-image: url(./cover.png); background-size: cover; position: absolute; top: 30px; left: 30px; z-index: 200;">
+        <div style="position: relative; z-index: 300; top: 310px; left: 70px; color: #fefefe; font-weight: 400;">
+          <p>{{date}}</p>
+          <p>{{episode}}</p>
+        </div>
+      </div>
       <div ref="preview" style="position: relative; width: 854px; box-sizing: border-box;">
         <table style="width: 854px; border: 0; border-spacing: 0; background-color: #E4DFEC; border-collapse: collapse; font-size: 16px;">
-          <!-- 封面 -->
           <tr>
             <td style="width: 30px;"></td>
             <td style="width: 30px;"></td>
@@ -86,6 +91,18 @@
             </td>
             <td colspan="3">
                 <b>{{ckd_sum}}</b>
+            </td>
+            <td></td>
+            <td style="background-color: #e4dfec;"></td>
+          </tr>
+          <tr style="background-color: #ffffff; height: 42px; color: #000000;">
+            <td style="background-color: #e4dfec;"></td>
+            <td></td>
+            <td colspan="3">
+                <b><span style="color: #8B0051;">行业政策新闻</span> | Industry News</b>
+            </td>
+            <td colspan="3">
+                <b>{{industry_sum}}</b>
             </td>
             <td></td>
             <td style="background-color: #e4dfec;"></td>
@@ -227,6 +244,42 @@
             <td style="background-color: #e4dfec;"></td>
           </tr>
           <!-- CKD 结束 -->
+          <!-- Industry 开始 -->
+          <tr v-if="industry_sum" style="background-color: #8B0051; height: 42px; color: #ffffff;">
+            <td style="background-color: #e4dfec;"></td>
+            <td></td>
+            <td colspan="6">
+              <b>行业政策新闻<span style="color: #000000;"> | Industry News</span></b>
+            </td>
+            <td></td>
+            <td style="background-color: #e4dfec;"></td>
+          </tr>
+          <tr v-if="industry_sum" style="height: 42px; background-color: #ffffff;">
+            <td style="background-color: #e4dfec;"></td>
+            <td colspan="8"></td>
+            <td style="background-color: #e4dfec;"></td>
+          </tr>
+          <tbody v-if="industry_sum">
+            <tr v-for="(e, ei) in industry" :key="e.title+'-'+ei" style="background-color: #ffffff;">
+              <td style="background-color: #e4dfec;"></td>
+              <td></td>
+              <td colspan="6">
+                <div style="margin: 30px 0;">
+                  <p><b><a :href="e.link" target="_blank">{{e.title}}</a></b></p>
+                  <p><b>{{e.media}}<span style="color: #ffffff;">------------</span>{{e.publish}}</b></p>
+                  <p>{{e.abstract}}</p>
+                </div>
+              </td>
+              <td></td>
+              <td style="background-color: #e4dfec;"></td>
+            </tr>
+          </tbody>
+          <tr v-if="industry_sum" style="height: 42px; background-color: #ffffff;">
+            <td style="background-color: #e4dfec;"></td>
+            <td colspan="8"></td>
+            <td style="background-color: #e4dfec;"></td>
+          </tr>
+          <!-- Industry 结束 -->
           <tr>
             <td colspan="10" style="height: 30px;"></td>
           </tr>
@@ -234,12 +287,15 @@
       </div>
     </div>
     <!-- 操作 -->
-    <div style="background-color: #eeeeee; position: fixed; z-index: 5; top: 0; right: 0; width: calc(100% - 854px); height: 200px; padding: 14px; box-sizing: border-box;">
+    <div style="background-color: #eeeeee; position: fixed; z-index: 5; top: 0; right: 0; width: calc(100% - 854px); height: 210px; padding: 14px; box-sizing: border-box;">
+      <input type="text" v-model="date" placeholder="日期" style="width: 40%;">
+      <input type="text" v-model="episode" placeholder="刊号" style="width: 40%;">
       <select v-model="category" v-on:change="handleChange" style="width: 40%;">
-        <option disabled>药品分类</option>
+        <option disabled>分类</option>
         <option value="0">心血管</option>
         <option value="1">代谢</option>
         <option value="2">肾脏</option>
+        <option value="3">行业政策</option>
       </select>
       <select v-model="drug" style="width: 40%;">
         <option :value="i.toString()" :key="i.toString()" v-for="(e, i) in options">{{e}}</option>
@@ -256,13 +312,13 @@
       </div>
     </div>
     <!-- 列表 -->
-    <div style="font-size: 12px; background-color: #f8f8f8; position: absolute; right: 0; top: 200px; width: calc(100% - 854px); height: calc(100vh - 200px); padding: 14px; box-sizing: border-box; overflow-y: scroll;">
+    <div style="font-size: 12px; background-color: #f8f8f8; position: absolute; right: 0; top: 210px; width: calc(100% - 854px); height: calc(100vh - 210px); padding: 14px; box-sizing: border-box; overflow-y: scroll;">
       <div v-if="cv_sum">
         <h3>心血管 CV</h3>
         <div v-if="drug.articles.length" v-for="(drug, drug_index) in cv_drugs" :key="drug_index">
           <em>{{drug.name}}</em>
           <ul>
-            <li v-for="(article, article_index) in drug.articles" :key="article_index">
+            <li v-for="(article, article_index) in drug.articles" :key="article.title+'-'+article_index">
               <span>{{article.title}}</span>
               <button data-drug="cv_drugs" :data-index1="drug_index" :data-index2="article_index" v-on:click="handleDelete">×</button>
             </li>
@@ -274,7 +330,7 @@
         <div v-if="drug.articles.length" v-for="(drug, drug_index) in dm_drugs" :key="drug_index">
           <em>{{drug.name}}</em>
           <ul>
-            <li v-for="(article, article_index) in drug.articles" :key="article_index">
+            <li v-for="(article, article_index) in drug.articles" :key="article.title+'-'+article_index">
               <span>{{article.title}}</span>
               <button data-drug="dm_drugs" :data-index1="drug_index" :data-index2="article_index" v-on:click="handleDelete">×</button>
             </li>
@@ -286,9 +342,20 @@
         <div v-if="drug.articles.length" v-for="(drug, drug_index) in ckd_drugs" :key="drug_index">
           <em>{{drug.name}}</em>
           <ul>
-            <li v-for="(article, article_index) in drug.articles" :key="article_index">
+            <li v-for="(article, article_index) in drug.articles" :key="article.title+'-'+article_index">
               <span>{{article.title}}</span>
               <button data-drug="ckd_drugs" :data-index1="drug_index" :data-index2="article_index" v-on:click="handleDelete">×</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div v-if="industry_sum">
+        <h3>行业 Industry</h3>
+        <div>
+          <ul>
+            <li v-for="(article, article_index) in industry" :key="article.title+'-'+article_index">
+              <span>{{article.title}}</span>
+              <button data-drug="industry" :data-index2="article_index" v-on:click="handleDelete">×</button>
             </li>
           </ul>
         </div>
@@ -321,6 +388,8 @@
     const app = new Vue({
       el: '#app',
       data: {
+        date: '',
+        episode: '',
         category: '0',
         drug: '0',
         title: '',
@@ -433,7 +502,8 @@
             name: '美信罗-竞品',
             articles: []
           }
-        ]
+        ],
+        industry: []
       },
       computed: {
         options: function () {
@@ -445,9 +515,11 @@
               ? this.dm_drugs.map(function (e) {
                 return e.name;
               })
-              : this.ckd_drugs.map(function (e) {
+              : this.category == '2'
+                ? this.ckd_drugs.map(function (e) {
                 return e.name;
-              })
+                })
+                : []
         },
         cv_sum: function () {
           return this.cv_drugs.reduce(function (acc, cur) {
@@ -463,6 +535,9 @@
           return this.ckd_drugs.reduce(function (acc, cur) {
             return acc + cur.articles.length;
           }, 0);
+        },
+        industry_sum: function () {
+          return this.industry.length;
         }
       },
       methods: {
@@ -487,8 +562,10 @@
             this.cv_drugs[item.drug].articles.push(item.article);
           } else if (item.category == '1') {
             this.dm_drugs[item.drug].articles.push(item.article);
-          } else {
+          } else if (item.category == '2') {
             this.ckd_drugs[item.drug].articles.push(item.article);
+          } else {
+            this.industry.push(item.article);
           }
 
           this.title = '';
@@ -500,9 +577,14 @@
         },
         handleDelete: function (e) {
           const drug = e.target.dataset.drug;
-          const index1 = e.target.dataset.index1;
+          const index1 = e.target.dataset.index1 || -1;
           const index2 = e.target.dataset.index2;
-          this[drug][index1].articles.splice(index2, 1);
+          
+          if (index1 == -1) {
+            this[drug].splice(index2, 1)
+          } else {
+            this[drug][index1].articles.splice(index2, 1);
+          }
         }
       },
       updated: function () {
