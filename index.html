@@ -23,7 +23,7 @@
       <div style="width: 794px; height: 424px; background-image: url(./cover.png); background-size: cover; position: absolute; top: 30px; left: 30px; z-index: 200;">
         <div style="position: relative; z-index: 300; top: 310px; left: 70px; color: #fefefe; font-weight: 400;">
           <p>{{date}}</p>
-          <p>{{episode}}</p>
+          <p>{{episode}}&nbsp;|&nbsp;该报告为测试版，正式版上线时间为7月1日</p>
         </div>
       </div>
       <div ref="preview" style="position: relative; width: 854px; box-sizing: border-box;">
@@ -63,18 +63,6 @@
             <td style="background-color: #e4dfec;"></td>
             <td></td>
             <td colspan="3">
-                <b><span style="color: #8B0051;">心血管</span> | CV</b>
-            </td>
-            <td colspan="3">
-                <b>{{cv_sum}}</b>
-            </td>
-            <td></td>
-            <td style="background-color: #e4dfec;"></td>
-          </tr>
-          <tr style="background-color: #ffffff; height: 42px; color: #000000;">
-            <td style="background-color: #e4dfec;"></td>
-            <td></td>
-            <td colspan="3">
                 <b><span style="color: #8B0051">代谢</span> | DM</b>
             </td>
             <td colspan="3">
@@ -99,6 +87,18 @@
             <td style="background-color: #e4dfec;"></td>
             <td></td>
             <td colspan="3">
+                <b><span style="color: #8B0051;">心血管</span> | CV</b>
+            </td>
+            <td colspan="3">
+                <b>{{cv_sum}}</b>
+            </td>
+            <td></td>
+            <td style="background-color: #e4dfec;"></td>
+          </tr>
+          <tr style="background-color: #ffffff; height: 42px; color: #000000;">
+            <td style="background-color: #e4dfec;"></td>
+            <td></td>
+            <td colspan="3">
                 <b><span style="color: #8B0051;">行业政策新闻</span> | Industry News</b>
             </td>
             <td colspan="3">
@@ -115,49 +115,6 @@
             <td style="background-color: #e4dfec;"></td>
           </tr>
           <!-- 汇总结束 -->
-          <!-- CV 开始 -->
-          <tr v-if="cv_sum" style="background-color: #8B0051; height: 42px; color: #ffffff;">
-            <td style="background-color: #e4dfec;"></td>
-            <td></td>
-            <td colspan="6">
-              <b>心血管<span style="color: #000000;"> | CV</span></b>
-            </td>
-            <td></td>
-            <td style="background-color: #e4dfec;"></td>
-          </tr>
-          <tr v-if="cv_sum" style="height: 42px; background-color: #ffffff;">
-            <td style="background-color: #e4dfec;"></td>
-            <td colspan="8"></td>
-            <td style="background-color: #e4dfec;"></td>
-          </tr>
-          <tbody v-for="(e, ei) in cv_drugs" :key="e.name+'-'+ei">
-            <tr v-if="e.articles.length" style="height: 42px; background-color: #ffffff;">
-              <td style="background-color: #e4dfec;"></td>
-              <td></td>
-              <td colspan="6" style="color: #8B0051;"><b>{{e.name}}</b></td>
-              <td></td>
-              <td style="background-color: #e4dfec;"></td>
-            </tr>
-            <tr v-if="e.articles.length" style="background-color: #ffffff;">
-              <td style="background-color: #e4dfec;"></td>
-              <td></td>
-              <td colspan="6">
-                <div v-for="(a, ai) in e.articles" :key="e.name+'-'+ai" style="margin: 30px 0;">
-                  <p><b><a :href="a.link" target="_blank">{{a.title}}</a></b></p>
-                  <p><b>{{a.media}}<span style="color: #ffffff;">------------</span>{{a.publish}}<span style="color: #ffffff;">------------</span>相似文章共{{a.related}}篇</b></p>
-                  <p>{{a.abstract}}</p>
-                </div>
-              </td>
-              <td></td>
-              <td style="background-color: #e4dfec;"></td>
-            </tr>
-          </tbody>
-          <tr v-if="cv_sum" style="height: 42px; background-color: #ffffff;">
-              <td style="background-color: #e4dfec;"></td>
-              <td colspan="8"></td>
-              <td style="background-color: #e4dfec;"></td>
-          </tr>
-          <!-- CV 结束 -->
           <!-- DM 开始 -->
           <tr v-if="dm_sum" style="background-color: #8B0051; height: 42px; color: #ffffff;">
             <td style="background-color: #e4dfec;"></td>
@@ -244,6 +201,49 @@
             <td style="background-color: #e4dfec;"></td>
           </tr>
           <!-- CKD 结束 -->
+          <!-- CV 开始 -->
+          <tr v-if="cv_sum" style="background-color: #8B0051; height: 42px; color: #ffffff;">
+            <td style="background-color: #e4dfec;"></td>
+            <td></td>
+            <td colspan="6">
+              <b>心血管<span style="color: #000000;"> | CV</span></b>
+            </td>
+            <td></td>
+            <td style="background-color: #e4dfec;"></td>
+          </tr>
+          <tr v-if="cv_sum" style="height: 42px; background-color: #ffffff;">
+            <td style="background-color: #e4dfec;"></td>
+            <td colspan="8"></td>
+            <td style="background-color: #e4dfec;"></td>
+          </tr>
+          <tbody v-for="(e, ei) in cv_drugs" :key="e.name+'-'+ei">
+            <tr v-if="e.articles.length" style="height: 42px; background-color: #ffffff;">
+              <td style="background-color: #e4dfec;"></td>
+              <td></td>
+              <td colspan="6" style="color: #8B0051;"><b>{{e.name}}</b></td>
+              <td></td>
+              <td style="background-color: #e4dfec;"></td>
+            </tr>
+            <tr v-if="e.articles.length" style="background-color: #ffffff;">
+              <td style="background-color: #e4dfec;"></td>
+              <td></td>
+              <td colspan="6">
+                <div v-for="(a, ai) in e.articles" :key="e.name+'-'+ai" style="margin: 30px 0;">
+                  <p><b><a :href="a.link" target="_blank">{{a.title}}</a></b></p>
+                  <p><b>{{a.media}}<span style="color: #ffffff;">------------</span>{{a.publish}}<span style="color: #ffffff;">------------</span>相似文章共{{a.related}}篇</b></p>
+                  <p>{{a.abstract}}</p>
+                </div>
+              </td>
+              <td></td>
+              <td style="background-color: #e4dfec;"></td>
+            </tr>
+          </tbody>
+          <tr v-if="cv_sum" style="height: 42px; background-color: #ffffff;">
+              <td style="background-color: #e4dfec;"></td>
+              <td colspan="8"></td>
+              <td style="background-color: #e4dfec;"></td>
+          </tr>
+          <!-- CV 结束 -->
           <!-- Industry 开始 -->
           <tr v-if="industry_sum" style="background-color: #8B0051; height: 42px; color: #ffffff;">
             <td style="background-color: #e4dfec;"></td>
@@ -292,9 +292,9 @@
       <input type="text" v-model="episode" placeholder="刊号" style="width: 40%;">
       <select v-model="category" v-on:change="handleChange" style="width: 40%;">
         <option disabled>分类</option>
-        <option value="0">心血管</option>
-        <option value="1">代谢</option>
-        <option value="2">肾脏</option>
+        <option value="0">代谢</option>
+        <option value="1">肾病</option>
+        <option value="2">心血管</option>
         <option value="3">行业政策</option>
       </select>
       <select v-model="drug" style="width: 40%;">
@@ -313,18 +313,6 @@
     </div>
     <!-- 列表 -->
     <div style="font-size: 12px; background-color: #f8f8f8; position: absolute; right: 0; top: 210px; width: calc(100% - 854px); height: calc(100vh - 210px); padding: 14px; box-sizing: border-box; overflow-y: scroll;">
-      <div v-if="cv_sum">
-        <h3>心血管 CV</h3>
-        <div v-if="drug.articles.length" v-for="(drug, drug_index) in cv_drugs" :key="drug_index">
-          <em>{{drug.name}}</em>
-          <ul>
-            <li v-for="(article, article_index) in drug.articles" :key="article.title+'-'+article_index">
-              <span>{{article.title}}</span>
-              <button data-drug="cv_drugs" :data-index1="drug_index" :data-index2="article_index" v-on:click="handleDelete">×</button>
-            </li>
-          </ul>
-        </div>
-      </div>
       <div v-if="dm_sum">
         <h3>代谢 DM</h3>
         <div v-if="drug.articles.length" v-for="(drug, drug_index) in dm_drugs" :key="drug_index">
@@ -345,6 +333,18 @@
             <li v-for="(article, article_index) in drug.articles" :key="article.title+'-'+article_index">
               <span>{{article.title}}</span>
               <button data-drug="ckd_drugs" :data-index1="drug_index" :data-index2="article_index" v-on:click="handleDelete">×</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div v-if="cv_sum">
+        <h3>心血管 CV</h3>
+        <div v-if="drug.articles.length" v-for="(drug, drug_index) in cv_drugs" :key="drug_index">
+          <em>{{drug.name}}</em>
+          <ul>
+            <li v-for="(article, article_index) in drug.articles" :key="article.title+'-'+article_index">
+              <span>{{article.title}}</span>
+              <button data-drug="cv_drugs" :data-index1="drug_index" :data-index2="article_index" v-on:click="handleDelete">×</button>
             </li>
           </ul>
         </div>
@@ -400,6 +400,18 @@
         abstract: '',
         cv_drugs: [
           {
+            name: '倍林达-本品',
+            articles: []
+          }, {
+            name: '泰嘉-竞品',
+            articles: []
+          }, {
+            name: '波立维-竞品',
+            articles: []
+          }, {
+            name: '阿斯利康『一包药』',
+            articles: []
+          }, {
             name: '可定-本品',
             articles: []
           }, {
@@ -425,18 +437,6 @@
             articles: []
           }, {
             name: '博苏-竞品',
-            articles: []
-          }, {
-            name: '倍林达-本品',
-            articles: []
-          }, {
-            name: '泰嘉-竞品',
-            articles: []
-          }, {
-            name: '波立维-竞品',
-            articles: []
-          }, {
-            name: '阿斯利康『一包药』',
             articles: []
           }, {
             name: 'CPC 胸痛中心',
@@ -508,15 +508,15 @@
       computed: {
         options: function () {
           return this.category == '0'
-            ? this.cv_drugs.map(function (e) {
+            ? this.dm_drugs.map(function (e) {
               return e.name;
             })
             : this.category == '1'
-              ? this.dm_drugs.map(function (e) {
+              ? this.ckd_drugs.map(function (e) {
                 return e.name;
               })
               : this.category == '2'
-                ? this.ckd_drugs.map(function (e) {
+                ? this.cv_drugs.map(function (e) {
                 return e.name;
                 })
                 : []
@@ -559,11 +559,11 @@
           }
 
           if (item.category == '0') {
-            this.cv_drugs[item.drug].articles.push(item.article);
-          } else if (item.category == '1') {
             this.dm_drugs[item.drug].articles.push(item.article);
-          } else if (item.category == '2') {
+          } else if (item.category == '1') {
             this.ckd_drugs[item.drug].articles.push(item.article);
+          } else if (item.category == '2') {
+            this.cv_drugs[item.drug].articles.push(item.article);
           } else {
             this.industry.push(item.article);
           }
