@@ -22,8 +22,7 @@
     <div style="position: absolute; height: 100vh; overflow-x: hidden; overflow-y: scroll;">
       <div style="width: 794px; height: 424px; background-image: url(./cover.png); background-size: cover; position: absolute; top: 30px; left: 30px; z-index: 200;">
         <div style="position: relative; z-index: 300; top: 310px; left: 70px; color: #fefefe; font-weight: 400;">
-          <p>{{date}}</p>
-          <p>{{episode}}&nbsp;|&nbsp;该报告为测试版，正式版上线时间为7月1日</p>
+          <p>CVRM每日媒体监测{{date}}&nbsp;|&nbsp;Daily media monitoring report&nbsp;{{date}}</p>
         </div>
       </div>
       <div ref="preview" style="position: relative; width: 854px; box-sizing: border-box;">
@@ -289,7 +288,7 @@
     <!-- 操作 -->
     <div style="background-color: #eeeeee; position: fixed; z-index: 5; top: 0; right: 0; width: calc(100% - 854px); height: 210px; padding: 14px; box-sizing: border-box;">
       <input type="text" v-model="date" placeholder="日期" style="width: 40%;">
-      <input type="text" v-model="episode" placeholder="刊号" style="width: 40%;">
+      <br>
       <select v-model="category" v-on:change="handleChange" style="width: 40%;">
         <option disabled>分类</option>
         <option value="0">代谢</option>
@@ -389,7 +388,6 @@
       el: '#app',
       data: {
         date: '',
-        episode: '',
         category: '0',
         drug: '0',
         title: '',
