@@ -98,6 +98,18 @@
             <td style="background-color: #e4dfec;"></td>
             <td></td>
             <td colspan="3">
+                <b><span style="color: #8B0051;">企业新闻</span> | Corporate News</b>
+            </td>
+            <td colspan="3">
+                <b>{{corporate_sum}}</b>
+            </td>
+            <td></td>
+            <td style="background-color: #e4dfec;"></td>
+          </tr>
+          <tr style="background-color: #ffffff; height: 42px; color: #000000;">
+            <td style="background-color: #e4dfec;"></td>
+            <td></td>
+            <td colspan="3">
                 <b><span style="color: #8B0051;">行业政策新闻</span> | Industry News</b>
             </td>
             <td colspan="3">
@@ -243,6 +255,42 @@
               <td style="background-color: #e4dfec;"></td>
           </tr>
           <!-- CV 结束 -->
+          <!-- Corporate 开始 -->
+          <tr v-if="corporate_sum" style="background-color: #8B0051; height: 42px; color: #ffffff;">
+            <td style="background-color: #e4dfec;"></td>
+            <td></td>
+            <td colspan="6">
+              <b>企业新闻<span style="color: #000000;"> | Corporate News</span></b>
+            </td>
+            <td></td>
+            <td style="background-color: #e4dfec;"></td>
+          </tr>
+          <tr v-if="corporate_sum" style="height: 42px; background-color: #ffffff;">
+            <td style="background-color: #e4dfec;"></td>
+            <td colspan="8"></td>
+            <td style="background-color: #e4dfec;"></td>
+          </tr>
+          <tbody v-if="corporate_sum">
+            <tr v-for="(e, ei) in corporate" :key="e.title+'-'+ei" style="background-color: #ffffff;">
+              <td style="background-color: #e4dfec;"></td>
+              <td></td>
+              <td colspan="6">
+                <div style="margin: 30px 0;">
+                  <p><b><a :href="e.link" target="_blank">{{e.title}}</a></b></p>
+                  <p><b>{{e.media}}<span style="color: #ffffff;">------------</span>{{e.publish}}</b></p>
+                  <p>{{e.abstract}}</p>
+                </div>
+              </td>
+              <td></td>
+              <td style="background-color: #e4dfec;"></td>
+            </tr>
+          </tbody>
+          <tr v-if="corporate_sum" style="height: 42px; background-color: #ffffff;">
+            <td style="background-color: #e4dfec;"></td>
+            <td colspan="8"></td>
+            <td style="background-color: #e4dfec;"></td>
+          </tr>
+          <!-- Corporate 结束 -->
           <!-- Industry 开始 -->
           <tr v-if="industry_sum" style="background-color: #8B0051; height: 42px; color: #ffffff;">
             <td style="background-color: #e4dfec;"></td>
@@ -297,6 +345,7 @@
         <option value="0">代谢</option>
         <option value="1">肾病</option>
         <option value="2">心血管</option>
+        <option value="4">企业新闻</option>
         <option value="3">行业政策</option>
       </select>
       <select v-model="drug" style="width: 40%;">
@@ -316,7 +365,7 @@
     <!-- 列表 -->
     <div style="font-size: 12px; background-color: #f8f8f8; position: absolute; right: 0; top: 210px; width: calc(100% - 854px); height: calc(100vh - 210px); padding: 14px; box-sizing: border-box; overflow-y: scroll;">
       <div v-if="dm_sum">
-        <h3>代谢 DM</h3>
+        <h3>代谢DM</h3>
         <div v-if="drug.articles.length" v-for="(drug, drug_index) in dm_drugs" :key="drug_index">
           <em>{{drug.name}}</em>
           <ul>
@@ -328,7 +377,7 @@
         </div>
       </div>
       <div v-if="ckd_sum">
-        <h3>肾脏 CKD</h3>
+        <h3>肾脏CKD</h3>
         <div v-if="drug.articles.length" v-for="(drug, drug_index) in ckd_drugs" :key="drug_index">
           <em>{{drug.name}}</em>
           <ul>
@@ -340,7 +389,7 @@
         </div>
       </div>
       <div v-if="cv_sum">
-        <h3>心血管 CV</h3>
+        <h3>心血管CV</h3>
         <div v-if="drug.articles.length" v-for="(drug, drug_index) in cv_drugs" :key="drug_index">
           <em>{{drug.name}}</em>
           <ul>
@@ -351,8 +400,19 @@
           </ul>
         </div>
       </div>
+      <div v-if="corporate_sum">
+        <h3>企业Corporate</h3>
+        <div>
+          <ul>
+            <li v-for="(article, article_index) in corporate" :key="article.title+'-'+article_index">
+              <span>{{article.title}}</span>
+              <button data-drug="corporate" :data-index2="article_index" v-on:click="handleDelete">×</button>
+            </li>
+          </ul>
+        </div>
+      </div>
       <div v-if="industry_sum">
-        <h3>行业 Industry</h3>
+        <h3>行业Industry</h3>
         <div>
           <ul>
             <li v-for="(article, article_index) in industry" :key="article.title+'-'+article_index">
@@ -409,6 +469,9 @@
             articles: []
           }, {
             name: '波立维|Plavix-竞品',
+            articles: []
+          }, {
+            name: '泰仪|Generic-竞品',
             articles: []
           }, {
             name: '阿斯利康『一包药』',
@@ -508,7 +571,8 @@
             articles: []
           }
         ],
-        industry: []
+        industry: [],
+        corporate: []
       },
       computed: {
         options: function () {
@@ -543,6 +607,9 @@
         },
         industry_sum: function () {
           return this.industry.length;
+        }, 
+        corporate_sum: function () {
+          return this.corporate.length;
         }
       },
       methods: {
@@ -569,8 +636,10 @@
             this.ckd_drugs[item.drug].articles.push(item.article);
           } else if (item.category == '2') {
             this.cv_drugs[item.drug].articles.push(item.article);
-          } else {
+          } else if (item.category == '3') {
             this.industry.push(item.article);
+          } else {
+            this.corporate.push(item.article);
           }
 
           this.title = '';
