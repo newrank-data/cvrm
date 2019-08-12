@@ -367,17 +367,21 @@
       <div v-if="dm_sum">
         <h3>代谢DM</h3>
         <div v-if="drug.articles.length" v-for="(drug, drug_index) in dm_drugs" :key="drug_index">
-          <em>{{drug.name}}</em>
-          <ul>
-            <li v-for="(article, article_index) in drug.articles" :key="article.title+'-'+article_index">
-              <span>{{article.title}}</span>
-              <button data-drug="dm_drugs" :data-index1="drug_index" :data-index2="article_index" v-on:click="handleDelete">×</button>
-            </li>
-          </ul>
+          <div v-if="drug.articles.length">
+            <em>{{drug.name}}</em>
+            <ul>
+              <li v-for="(article, article_index) in drug.articles" :key="article.title+'-'+article_index">
+                <span>{{article.title}}</span>
+                <button data-drug="dm_drugs" :data-index1="drug_index" :data-index2="article_index" v-on:click="handleDelete">×</button>
+              </li>
+            </ul>
+          </div>
         </div>
-        <div v-if="cv_sum">
-          <h3>心血管CV</h3>
-          <div v-if="drug.articles.length" v-for="(drug, drug_index) in cv_drugs" :key="drug_index">
+      </div>
+      <div v-if="cv_sum">
+        <h3>心血管CV</h3>
+        <div v-for="(drug, drug_index) in cv_drugs" :key="drug_index">
+          <div v-if="drug.articles.length">
             <em>{{drug.name}}</em>
             <ul>
               <li v-for="(article, article_index) in drug.articles" :key="article.title+'-'+article_index">
@@ -391,13 +395,15 @@
       <div v-if="ckd_sum">
         <h3>肾病Renal</h3>
         <div v-if="drug.articles.length" v-for="(drug, drug_index) in ckd_drugs" :key="drug_index">
-          <em>{{drug.name}}</em>
-          <ul>
-            <li v-for="(article, article_index) in drug.articles" :key="article.title+'-'+article_index">
-              <span>{{article.title}}</span>
-              <button data-drug="ckd_drugs" :data-index1="drug_index" :data-index2="article_index" v-on:click="handleDelete">×</button>
-            </li>
-          </ul>
+          <div v-if="drug.articles.length">
+            <em>{{drug.name}}</em>
+            <ul>
+              <li v-for="(article, article_index) in drug.articles" :key="article.title+'-'+article_index">
+                <span>{{article.title}}</span>
+                <button data-drug="ckd_drugs" :data-index1="drug_index" :data-index2="article_index" v-on:click="handleDelete">×</button>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
       <div v-if="corporate_sum">
